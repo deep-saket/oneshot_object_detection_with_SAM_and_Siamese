@@ -35,6 +35,12 @@ wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 python demo_one_shot_detection.py --query_image_path ./demo_images/qr18.jpg --image_path ./demo_images/db3103.jpg --output_dir ./outputs 
 ```
 
+## Generate Submission
+- Use the command below to generate submission
+```bash
+python gen_submissions.py --shelf_dir PATH/TO/product_detection_from_packshots/shelf_images/  --query_dir .PATH/TO/product_detection_from_packshots/product_images
+```
+
 ## Siamese Classification Model
 - This model was trained by me, using a custom build dataset on K80 to serve as POC for an earlier work
 - The backbone of the model is VGG and the dataset has 80 different classes and all classes have same number of images

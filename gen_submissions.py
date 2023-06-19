@@ -14,10 +14,6 @@ if __name__ == '__main__':
 
     parser.add_argument("--shelf_dir", "-i", type=str, required=True, help="path to image file")
     parser.add_argument("--query_dir", "-qi", type=str, default="", required=True, help="path to query image file")
-    
-    parser.add_argument(
-        "--output_dir", "-o", type=str, default="outputs", required=True, help="output directory"
-    )
     parser.add_argument("--saved_model_dir", type=str, default='',
                         help="Where restore model parameters from.")
     args = parser.parse_args()
@@ -25,7 +21,6 @@ if __name__ == '__main__':
     # load arguments
     shelf_dir = args.shelf_dir
     query_dir = args.query_dir
-    output_dir = args.output_dir
 
 
      ## load siamese model
@@ -93,19 +88,9 @@ if __name__ == '__main__':
                 if 0 in crop.shape:
                     continue
                 if one_shot_match(crop, query_embed, model_siamese, from_query_embed = True):
-                    # cv2.imwrite(f"./{output_dir}/{i}.png", crop)
                     i += 1
                     final_bboxes.append(bbox)
                     print(f"Detected object at location {bbox}")
-
-            # make dir
-            # os.makedirs(output_dir, exist_ok=True)
-            # print('Final bboxed =', len(final_bboxes))
-
-            # grounded resultsSS
-            # image_pil = Image.open(input_image_path)
-            # image_with_box = plot_boxes_to_image(image_pil, final_bboxes, ['Detected' for idx in final_bboxes])[0]
-            # image_with_box.save(os.path.join(f"./{output_dir}/owlvit_box.png"))
 
             with open('a.txt', 'w') as f:
                 for box in final_bboxes:
