@@ -60,42 +60,41 @@ if __name__ == '__main__':
     mask_generator = SamAutomaticMaskGenerator(sam)
     
     
+    with open('solution_2.txt', 'w') as f:
+        for shelf_image_name in os.listdir(shelf_dir):
+            shelf_image_path = os.path.join(shelf_dir, shelf_image_name)            
+            shelf_image_class = shelf_image_name[2:-4]
 
-    for shelf_image_name in os.listdir(shelf_dir):
-        shelf_image_path = os.path.join(shelf_dir, shelf_image_name)            
-        shelf_image_class = shelf_image_name[2:-4]
+            for query_image_name in os.listdir(query_dir):
+                query_image_path = os.path.join(query_dir, query_image_name)
+                query_image_class = query_image_name[2:-4]
+        
+                image = cv2.imread(shelf_image_path)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        for query_image_name in os.listdir(query_dir):
-            query_image_path = os.path.join(query_dir, query_image_name)
-            query_image_class = query_image_name[2:-4]
-    
-            image = cv2.imread(shelf_image_path)
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                query_image = cv2.imread(query_image_path)
+                query_image = cv2.cvtColor(query_image, cv2.COLOR_BGR2RGB)            
 
-            query_image = cv2.imread(query_image_path)
-            query_image = cv2.cvtColor(query_image, cv2.COLOR_BGR2RGB)            
+                masks = mask_generator.generate(image)
+                crops_and_bboxes = get_crops_and_bboxes(image, masks)
 
-            masks = mask_generator.generate(image)
-            crops_and_bboxes = get_crops_and_bboxes(image, masks)
+                
+                query_embed = get_embeddings(query_image, model_siamese)
 
-            
-            query_embed = get_embeddings(query_image, model_siamese)
+                final_bboxes = []
+                i = 0
+                # print('Totoal segments =', len(crops_and_bboxes))
+                for crop, bbox in crops_and_bboxes:
+                    if 0 in crop.shape:
+                        continue
+                    if one_shot_match(crop, query_embed, model_siamese, from_query_embed = True):
+                        i += 1
+                        final_bboxes.append(bbox)
+                        print(f"Detected object at location {bbox}")
 
-            final_bboxes = []
-            i = 0
-            # print('Totoal segments =', len(crops_and_bboxes))
-            for crop, bbox in crops_and_bboxes:
-                if 0 in crop.shape:
-                    continue
-                if one_shot_match(crop, query_embed, model_siamese, from_query_embed = True):
-                    i += 1
-                    final_bboxes.append(bbox)
-                    print(f"Detected object at location {bbox}")
-
-            with open('a.txt', 'w') as f:
-                for box in final_bboxes:
-                    x0, y0, x1, y1 = box
-                    x1 = x0 + x1
-                    y1 = y0 + y1
-                    x0, y0, x1, y1 = int(x0), int(y0), int(x1), int(y1)
-                    f.write(f'{shelf_image_class} {query_image_class} {int(x0)} {int(y0)} {int(x1)} {int(y1)}\n')
+                        # write in the txt file
+                        x0, y0, x1, y1 = bbox
+                        x1 = x0 + x1
+                        y1 = y0 + y1
+                        x0, y0, x1, y1 = int(x0), int(y0), int(x1), int(y1)
+                        f.write(f'{shelf_image_class} {query_image_class} {int(x0)} {int(y0)} {int(x1)} {int(y1)}\n')
