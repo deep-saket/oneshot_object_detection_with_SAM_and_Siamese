@@ -38,7 +38,7 @@ python demo_one_shot_detection.py --query_image_path ./demo_images/qr18.jpg --im
 ## Generate Submission
 - Use the command below to generate submission
 ```bash
-python gen_submissions.py --shelf_dir PATH/TO/product_detection_from_packshots/shelf_images/  --query_dir .PATH/TO/product_detection_from_packshots/product_images
+python gen_submissions.py --shelf_dir PATH/TO/product_detection_from_packshots/shelf_images/  --query_dir PATH/TO/product_detection_from_packshots/product_images
 ```
 
 ## Siamese Classification Model
