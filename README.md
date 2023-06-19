@@ -1,12 +1,8 @@
 # One shot object detection using SAM and siamese network
 An interesting demo by combining [Segment Anything](https://ai.facebook.com/research/publications/segment-anything/) of Meta and a VGG based Siamese Net
 
-![Segment Anything Result](./outputs/owlvit_segment_anything_output.jpg)
-
-
 ## Highlight
-- Image-conditioned detection g
-
+- Image-conditioned detection
 
 ## Catelog
 - [x] Image-conditioned detection
@@ -32,7 +28,7 @@ More details can be found in [installation segment anything](https://github.com/
 wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 ```
 
-- download VGG siamese classifier weights from 
+- download VGG siamese classifier weights from <a href='https://drive.google.com/file/d/1AYirOgPosRgOu8qehsDKj2FaziT3jVFc/view?usp=sharing'> here. </a>
 
 - Run demo (image paths and output_dir before running)
 ```bash
